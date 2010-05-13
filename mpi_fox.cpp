@@ -1,9 +1,9 @@
 /**********************************************************************************
 **	Filename 		: mpi_fox.cpp	
-**	Authors 		: Manu Kaul and Ahmad Bijairimi 
-**  Last Modified	: Monday, 26 Apr 2010
+**	Authors 		: Manu Kaul 
+**  	Last Modified		: Monday, 26 Apr 2010
 **  
-**  Description		: Parallel Matrix-Matrix Multiplication using Fox's Algorithm 	
+**  	Description		: Parallel Matrix-Matrix Multiplication using Fox's Algorithm 	
 **
 **********************************************************************************/
 #include <iostream>
@@ -16,16 +16,16 @@
 
 using namespace std;
 /* Constants */
-const int 		SEED 				= 171;
-const int 		SEED_MAIN 			= 30269;
-const double 	SEED_A				= 30268.0;
-const double 	SEED_B				= 30240.0;
-const int 		MAX_MATRIX_PRINT	= 16;
+const int 	SEED 			= 171;
+const int 	SEED_MAIN 		= 30269;
+const double 	SEED_A			= 30268.0;
+const double 	SEED_B			= 30240.0;
+const int 	MAX_MATRIX_PRINT	= 16;
 
 /* Global Matrix */
 double *matrixA, *matrixB, *matrixC;
-int 	num_proc;				// Number of processors
-int 	n 			= 0;		// Order of Matrices 
+int 	num_proc;			// Number of processors
+int 	n 		= 0;		// Order of Matrices 
 int 	n_sub 		= 0;		// Order of Sub-matrices
 int 	main_rank 	= 0;
 double 	start_t 	= 0;
@@ -35,15 +35,15 @@ double 	end_t 		= 0;
 double *subA, *subB, *subC;
 
 /* Grid Related Variables */
-int num_dim			= 2;					// Number of Grid Dimensions
+int num_dim		= 2;					// Number of Grid Dimensions
 int dimensions[2] 	= {0,0};				// 2-D Dimensions Array (x,y)
 int coordinates[2]	= {0,0};				// (x,y) coordinates for grid topology
 int dim_wrapping[2]	= {0,1};				// To do a cyclic shifting in the y dimension
 int reorder 		= 1;					// Let virtual topology of grid be optimized to 
-											// the physical topology by MPI for performance.
-MPI_Comm grid_comm;							// Communicator for total grid
-MPI_Comm row_comm;							// Communicator for Rows (x) in grid
-MPI_Comm col_comm;							// Communicator for Columns (y) in grid
+/* the physical topology by MPI for performance. */
+MPI_Comm grid_comm;						// Communicator for total grid
+MPI_Comm row_comm;						// Communicator for Rows (x) in grid
+MPI_Comm col_comm;						// Communicator for Columns (y) in grid
 
 /* Function Declarations */
 void makeGrid();
@@ -199,9 +199,9 @@ void distributeData (int in_rank, int n_sub, int sublen, int p, double *submatri
 			}
 		}
 		/* Create a new MPI Vector Type to divide the array into blocks to transfer */ 
-		int count		= n_sub; 
+		int count	= n_sub; 
 		int blocklen	= n_sub; 
-		int stride		= n;
+		int stride	= n;
 		MPI_Type_vector( count, blocklen, stride, MPI_DOUBLE, &blocktype);
 	  	MPI_Type_commit( &blocktype );
 		int block_starter = 0;
@@ -210,7 +210,7 @@ void distributeData (int in_rank, int n_sub, int sublen, int p, double *submatri
 		for(int i =0; i < dimensions[0]; i++ ){
 			for(int j =0; j < dimensions[1]; j++ ){
 				pos[0]=i; pos[1]=j;
-			    /* Get the Rank of the Process to send to! */
+			    	/* Get the Rank of the Process to send to! */
 				MPI_Cart_rank(grid_comm, pos, &grid_rank);
 				/* Bit of manipulation to decide what section of array to send */
 				MPI_Isend( matrixA + block_starter, 1, blocktype, grid_rank, 111, grid_comm, &req_send_A );
@@ -312,9 +312,9 @@ void collectData( double p, int in_rank, double *subC ){
 		
 	 /* Create a new MPI Vector Type to divide the array into blocks to transfer */ 
 	 int count		= n_sub; 
-	 int blocklen	= n_sub; 
+	 int blocklen		= n_sub; 
 	 int stride		= n;
-	 int block_starter = 0;
+	 int block_starter 	= 0;
 	 MPI_Type_vector( count, blocklen, stride, MPI_DOUBLE, &blocktype);
 	 MPI_Type_commit( &blocktype );
 		

@@ -1,0 +1,7 @@
+#
+# How To compile and execute
+#
+make fox
+mpirun -np 4 ./fox -o 16     # where -np = number of processors, -o takes in the order of matrices... must be a perfect square and divisible by num proc!
+
+
